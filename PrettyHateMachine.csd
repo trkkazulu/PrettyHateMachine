@@ -1,9 +1,9 @@
-; PrettyHateMachine.csd
+; PrettyHateMachine.csd bounds(0, 0, 0, 0)
 ; Written by Jair-Rohm Parker Wells 2019
 
 <Cabbage>
-form caption("Pretty Hate Machine") size(600, 100), pluginid("envf") style("legacy")
-image                  , , colour(22, 79, 50, 255), , , outlinethickness(4) bounds(0, 0, 530, 97) corners(5)
+form caption("Pretty Hate Machine") size(700, 100), pluginid("envf") style("legacy")
+image                  , , colour(22, 79, 50, 255), , , outlinethickness(4) bounds(0, 0, 650, 97) corners(5)
 ;image                  pos(0, 0), size(530, 100), colour("brown"), shape("rounded"), outlinecolour("white"), outlinethickness(4)
 vmeter   bounds(20, 10, 15, 80) channel("Meter") value(0) outlinecolour("black"), overlaycolour(20, 3, 3,255) metercolour:0(255,100,100,255) metercolour:1(255,150,155, 255) metercolour:2(255,255,123, 255) outlinethickness(3) 
 rslider bounds(40, 10, 75, 75) channel("sens") colour(255, 100, 100, 255) range(0, 1, 0.65, 1, 0.001) text("Guilt") textcolour(255, 255, 200, 255) trackercolour(255, 255, 150, 255)
@@ -13,12 +13,17 @@ rslider bounds(40, 10, 75, 75) channel("sens") colour(255, 100, 100, 255) range(
 rslider bounds( 40, 11, 75, 75), text("Guilt"), channel("sens"),  range(0, 1, 0.65),                   colour(255,100,100), textcolour(255,255,200), trackercolour(255,255,150)
 rslider bounds(110,  6, 45, 45), text("Att."),        channel("att"),   range(0.001, 0.5, 0.01, 0.5, 0.001), colour(255,200,100), textcolour(255,255,200), trackercolour(255,255,150)
 rslider bounds(110, 51, 45, 45), text("Dec."),        channel("rel"),   range(0.001, 0.5, 0.2, 0.5, 0.001),  colour(255,200,100), textcolour(255,255,200), trackercolour(255,255,150)
-rslider bounds(150, 10, 75, 75), text("Debasement"),   channel("freq"),  range(10, 10000, 1000, 0.5, 0.001),         colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255)
+rslider bounds(150, 10, 75, 75), text("Debasement"),   channel("freq"),  range(10, 10000, 1000, 0.5, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255)
 label    bounds(225, 15, 85, 14), text("Type"), fontcolour(255,255,200)
 combobox bounds(225, 30, 85, 20), text("lpf18","tone"), value("1"), channel("type")
-rslider bounds(310, 10, 75, 75), text("Praise"),   channel("res"),   range(0, 1, 0.75, 1, 0.001),                  colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("resID")
-rslider bounds(380, 11, 75, 75), text("Hate"),  channel("dist"),  range(0,  0.2, 0),                  colour(255,100,100), textcolour(255,255,200), trackercolour(255,255,150), identchannel("distID")
-rslider bounds(450, 11, 75, 75), text("Output"),       channel("level"), range(0, 1.00, 1),                   colour(255,200,100), textcolour(255,255,200), trackercolour(255,255,150)
+rslider bounds(420, 10, 75, 75), text("Praise"),channel("res"),   range(0, 1, 0.75, 1, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("resID")
+
+rslider bounds(490, 10, 75, 75), text("Hate"),  channel("dist"),  range(0, 0.2, 0, 1, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("distID")
+rslider bounds(560, 10, 75, 75), text("Output"), channel("level"), range(0, 1, 1, 1, 0.001), colour(255, 200, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255)
+
+checkbox bounds(324, 28, 78, 31) text("Out"),channel("oct"), radiogroup("99") 
+checkbox bounds(324, 60, 78, 32) text("In"),channel("oct"), radiogroup("99")value (1)  
+label bounds(324, 10, 78, 17) text("Octave")
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>
@@ -29,6 +34,7 @@ rslider bounds(450, 11, 75, 75), text("Output"),       channel("level"), range(0
 ksmps = 64
 nchnls = 2
 0dbfs = 1
+
 
 opcode	EnvelopeFollower,a,akkkkkkk
 	ain,ksens,katt,krel,kfreq,ktype,kres,kdist	xin	
@@ -71,6 +77,7 @@ ktype	init	1
 kres chnget "res"
 kdist chnget "dist"
 klevel chnget "level"
+kOct chnget "oct"
 a1,a2	ins
 
 
@@ -86,6 +93,8 @@ if changed:k(ktype)==1 then
   chnset	"visible(0)","resID"
  endif
 endif
+
+;kfactor octave(kOct)
 
 a1	diskin2	"bassClipCR.wav",1,0,1
 ;a1	=	a1*0.4
