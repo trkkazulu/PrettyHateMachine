@@ -75,61 +75,60 @@ giRevPerc	ftgen	0, 0, 4097,  16, 0, 4096-64, -2, 1, 64, -2, 0
 
 
 
-;opcode	pitchshifter, aa, aakkkkii	; individual buffer feedback
-;	a1,a1,kratio,kfeedback,kDelay,kSmooth,imaxdelay,iwfn	xin
-;	setksmps	1
-;
-;	kPortTime	linseg	0,0.001,1
-;	;if kSmooth>0 then					; portamento smoothing
-;	 kratio		portk	kratio, kPortTime*kSmooth	
-;	 kDelay		portk	kDelay, kPortTime*kSmooth	
-;	;endif
-;
-;	aDelay		interp	kDelay
-;
-;	arate		=	(kratio-1)/kDelay		;SUBTRACT 1/1 SPEED
-;
-;	aphase1		phasor	-arate				;MOVING PHASE 1-0
-;	aphase2		phasor	-arate, .5			;MOVING PHASE 1-0 - PHASE OFFSET BY 180 DEGREES (.5 RADIANS)
-;	
-;	agate1		tablei	aphase1, iwfn, 1, 0, 1		;
-;	agate2		tablei	aphase2, iwfn, 1, 0, 1		;
-;	
-;	abuf1		delayr	imaxdelay			;DECLARE DELAY BUFFER
-;	adelsig1	deltap3	aphase1 * aDelay		;VARIABLE TAP
-;	aGatedSig1	=	adelsig1 * agate1
-;			delayw	a1 + (aGatedSig1*kfeedback)	;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-;	
-;	abuf2		delayr	imaxdelay			;DECLARE DELAY BUFFER
-;	adelsig2	deltap3	aphase2 * aDelay		;VARIABLE TAP
-;	aGatedSig2	=	adelsig2 * agate2
-;			delayw	a1 + (aGatedSig2*kfeedback)	;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-;
-;	abuf3		delayr	imaxdelay			;DECLARE DELAY BUFFER
-;	adelsig3	deltap3	aphase1 * aDelay		;VARIABLE TAP
-;	aGatedSig3	=	adelsig3 * agate1
-;			delayw	a1+ (aGatedSig3*kfeedback)	;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-;	
-;	abuf4		delayr	imaxdelay			;DECLARE DELAY BUFFER
-;	adelsig4	deltap3	aphase2 * aDelay		;VARIABLE TAP
-;	aGatedSig4	=	adelsig4 * agate2
-;			delayw	a1+ (aGatedSig4*kfeedback)	;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-;			
-;	aGatedMixL	=	(aGatedSig1 + aGatedSig2) * 0.5
-;	aGatedMixR	=	(aGatedSig3 + aGatedSig4) * 0.5
-;			xout	aGatedMixL, aGatedMixR
-;endop
-;
+;;opcode	pitchshifter, aa, aakkkkii	; individual buffer feedback
+;;	a1,a1,kratio,kfeedback,kDelay,kSmooth,imaxdelay,iwfn	xin
+;;	setksmps	1
+;;
+;;	kPortTime	linseg	0,0.001,1
+;;	;if kSmooth>0 then					; portamento smoothing
+;;	 kratio		portk	kratio, kPortTime*kSmooth	
+;;	 kDelay		portk	kDelay, kPortTime*kSmooth	
+;;	;endif
+;;
+;;	aDelay		interp	kDelay
+;;
+;;	arate		=	(kratio-1)/kDelay		;SUBTRACT 1/1 SPEED
+;;
+;;	aphase1		phasor	-arate				;MOVING PHASE 1-0
+;;	aphase2		phasor	-arate, .5			;MOVING PHASE 1-0 - PHASE OFFSET BY 180 DEGREES (.5 RADIANS)
+;;	
+;;	agate1		tablei	aphase1, iwfn, 1, 0, 1		;
+;;	agate2		tablei	aphase2, iwfn, 1, 0, 1		;
+;;	
+;;	abuf1		delayr	imaxdelay			;DECLARE DELAY BUFFER
+;;	adelsig1	deltap3	aphase1 * aDelay		;VARIABLE TAP
+;;	aGatedSig1	=	adelsig1 * agate1
+;;			delayw	a1 + (aGatedSig1*kfeedback)	;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
+;;	
+;;	abuf2		delayr	imaxdelay			;DECLARE DELAY BUFFER
+;;	adelsig2	deltap3	aphase2 * aDelay		;VARIABLE TAP
+;;	aGatedSig2	=	adelsig2 * agate2
+;;			delayw	a1 + (aGatedSig2*kfeedback)	;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
+;;
+;;	abuf3		delayr	imaxdelay			;DECLARE DELAY BUFFER
+;;	adelsig3	deltap3	aphase1 * aDelay		;VARIABLE TAP
+;;	aGatedSig3	=	adelsig3 * agate1
+;;			delayw	a1+ (aGatedSig3*kfeedback)	;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
+;;	
+;;	abuf4		delayr	imaxdelay			;DECLARE DELAY BUFFER
+;;	adelsig4	deltap3	aphase2 * aDelay		;VARIABLE TAP
+;;	aGatedSig4	=	adelsig4 * agate2
+;;			delayw	a1+ (aGatedSig4*kfeedback)	;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
+;;			
+;;	aGatedMixL	=	(aGatedSig1 + aGatedSig2) * 0.5
+;;	aGatedMixR	=	(aGatedSig3 + aGatedSig4) * 0.5
+;;			xout	aGatedMixL, aGatedMixR
+;;endop
+;;
 ;
 ;opcode	pitchshifter2, aa, aakkkkii	; global feedback signal
 ;	a1,a1,kratio,kfeedback,kDelay,kSmooth,imaxdelay,iwfn	xin
 ;	setksmps	1
 ;
-;	kPortTime	linseg	0,0.001,1
-;	;if kSmooth>0 then					; portamento smoothing
+;	kPortTime	linseg	0,0.001,1;	;if kSmooth>0 then					; portamento smoothing
 ;	 kratio		portk	kratio, kPortTime*kSmooth	
 ;	 kDelay		portk	kDelay, kPortTime*kSmooth	
-;	;endif
+;	endif
 ;
 ;	aDelay		interp	kDelay
 ;
@@ -294,8 +293,8 @@ instr	1
 	kNIter		init	1
 	kDelay		chnget	"Delay"
 	kSmooth		chnget	"Smooth"
-	kMode	2	;chnget	"Mode"
-	kIntervalMode 1	;chnget	"IntervalMode"
+	kMode =	2	;chnget	"Mode"
+	kIntervalMode = 1	;chnget	"IntervalMode"
 	
 	if changed(kIntervalMode)==1 then				; semitones mode
 	 if kIntervalMode==1 then
@@ -307,22 +306,23 @@ instr	1
 	 endif
 	endif
 	
-	if kIntervalMode==1 then
-		kSemitones	 -12 ;chnget	"Semitones"
-		kSnap		1 ;chnget	"Snap"
+;	if kIntervalMode==1 then
+		kSemitones	= -12 ;chnget	"Semitones"
+;		kSnap		1 ;chnget	"Snap"
 ;		if kSnap==1 then
 ;		 if frac(kSemitones)!=0 then
-;		  kSemitones	=	round(kSemitones)
-;		  		chnset	kSemitones,"Semitones"
+		  kSemitones	=	round(kSemitones)
+		  		chnset	kSemitones,"Semitones"
 ;		 endif
-		endif
+;		endif
+
 	 	kRatio	=	semitone(kSemitones)	
-	else
-		kNumerator	chnget	"Numerator"
-		kDenominator	chnget	"Denominator"
-		kRatio		=	kNumerator/kDenominator
-		kSemitones	=	log2(kRatio)*12	
-	endif
+;	else
+;		kNumerator	chnget	"Numerator"
+;		kDenominator	chnget	"Denominator"
+;		kRatio		= kNumerator/kDenominator
+;		kSemitones	=	log2(kRatio)*12	
+;	endif
 	
 	if changed(kMode)==1 then
 	 if kMode==1 then
@@ -345,7 +345,7 @@ instr	1
 	
 	
 	iMaxDelay	=	4
-	kWindow		chnget	"Window"
+	kWindow	= giHanning	;chnget	"Window"
 	kWindow		init	1
 	if changed(kWindow)==1 then
 	 reinit UPDATE
@@ -353,36 +353,35 @@ instr	1
 	UPDATE:
 	iWfn	=	giHanning + i(kWindow) - 1
 
-	if kMode==1 then
-	 kFBMethod	chnget	"FBMethod"
+	;if kMode==1 then
+	 ;kFBMethod	chnget	"FBMethod"
 	 kFBMethod	init	1
-	 if kFBMethod==1 then
-	  aPS_L,aPS_R	pitchshifter	a1,a1,kRatio,kFeedback,kDelay,kSmooth,iMaxDelay,iWfn
-	 elseif kFBMethod==2 then
-	  aPS_L,aPS_R	pitchshifter2	a1,a1,kRatio,kFeedback,kDelay,kSmooth,iMaxDelay,iWfn	
-	 endif
-	elseif kMode==2 then
-	 if changed(kNIter)==1 then
-	  reinit UPDATE3
-	 endif
-	 UPDATE3:
-	 aPS_L,aPS_R	pitchshifter3	a1,a1,kRatio,i(kNIter),kDelay,kSmooth,iMaxDelay,iWfn	
-	elseif kMode==3 then		; HARMONIC ITERATIVE
-	 if changed(kNIter)==1 then
-	  reinit UPDATE4
-	 endif
+	 ;if kFBMethod==1 then
+	; aPS_L,aPS_R	pitchshifter	a1,a1,kRatio,kFeedback,kDelay,kSmooth,iMaxDelay,iWfn
+	 ;aPS_L,aPS_R pitchshifter a1, a1, kRatio, 0.9, 0.3, 0, 1,iWfn
+;	elseif kMode==2 then
+;	 if changed(kNIter)==1 then
+;	  reinit UPDATE3
+;;	 endif
+;	 UPDATE3:
+;	 aPS_L,aPS_R	pitchshifter3	a1,a1,1,i(kNIter),kDelay,kSmooth,iMaxDelay,iWfn	
+;	elseif kMode==3 then		; HARMONIC ITERATIVE
+;	 if changed(kNIter)==1 then
+;	  reinit UPDATE4
+;	 endif
 	 ;aFBL,aFBR	init	0
-	 UPDATE4:
+;	 UPDATE4:
 	 ;aPS_L,aPS_R	pitchshifter4	a1+aFBL,a1+aFBL,semitone(kSemitones-12),i(kNIter),kDelay,kSmooth,iMaxDelay,iWfn	
 	 ;aPS_L,aPS_R	pitchshifter4	a1,a1,semitone(kSemitones-12),i(kNIter),kDelay,kSmooth,iMaxDelay,iWfn	
 	 ;aFBL	=	aPS_L*kFeedback
 	 ;aFBR	=	aPS_R*kFeedback
-	endif
+;	endif
 
+aPS_L,aPS_R pitchshifter a1, a1, kRatio, 0.9, 0.3, 0, 1,iWfn
 	rireturn
-	kMix		chnget	"Mix"
-	aMixL		ntrpol	a1,aPS_L,kMix
-	aMixR		ntrpol	a1,aPS_R,kMix
+	kMix	= 0.5	;chnget	"Mix"
+	aMixL		ntrpol	a1,a1,kMix
+	aMixR		ntrpol	a1,a1,kMix
 	kLevel		chnget	"Level"
 			outs	aMixL*kLevel, aMixR*kLevel
 endin
