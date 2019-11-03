@@ -21,8 +21,8 @@ rslider bounds(420, 10, 75, 75), text("Praise"),channel("res"),   range(0, 1, 0.
 rslider bounds(490, 10, 75, 75), text("Hate"),  channel("dist"),  range(0, 0.2, 0, 1, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("distID")
 rslider bounds(560, 10, 75, 75), text("Output"), channel("level"), range(0, 1, 1, 1, 0.001), colour(255, 200, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255)
 
-checkbox bounds(324, 28, 78, 31) text("Out"),channel("oct"), radiogroup("99") 
-checkbox bounds(324, 60, 78, 32) text("In"),channel("oct"), radiogroup("99")value (1)  
+checkbox bounds(324, 28, 78, 31) text("Out"),channel("oct"), radiogroup("99") colour:1(255, 0, 0, 255)
+checkbox bounds(324, 60, 78, 32) text("In"),channel("oct"), radiogroup("99")value(1)  
 label bounds(324, 10, 78, 17) text("Octave")
 </Cabbage>
 <CsoundSynthesizer>
@@ -77,58 +77,58 @@ imaxdelay = 0.5
 iwfn = 1
 iCount = 0
 
-opcode	pitchshifter, aa, aakikkiip	; global feedback signal
-	a1,a1,kratio, iNIter,kDelay,kSmooth,imaxdelay,iwfn,iCount	xin
-	setksmps	1
-
-	kPortTime	linseg	0,0.001,1
-	;if kSmooth>0 then					; portamento smoothing
-	 kratioL	portk	1^iCount, kPortTime*kSmooth	
-	 kDelay		portk	kDelay, kPortTime*kSmooth	
-	;endif
-
-	aDelay		interp	kDelay
-
-	arate		=	(kratioL-1)/kDelay		;SUBTRACT 1/1 SPEED
-	aphase1		phasor	-arate				;MOVING PHASE 1-0
-	aphase2		phasor	-arate, .5			;MOVING PHASE 1-0 - PHASE OFFSET BY 180 DEGREES (.5 RADIANS)
-	
-	agate1		tablei	aphase1, iwfn, 1, 0, 1		;
-	agate2		tablei	aphase2, iwfn, 1, 0, 1		;
-
-	aGatedMixL,aGatedMixR	init	0
-	
-	abuf1		delayr	imaxdelay			;DECLARE DELAY BUFFER
-	adelsig1	deltap3	aphase1 * aDelay		;VARIABLE TAP
-	aGatedSig1	=	adelsig1 * agate1
-			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-	
-	abuf2		delayr	imaxdelay			;DECLARE DELAY BUFFER
-	adelsig2	deltap3	aphase2 * aDelay		;VARIABLE TAP
-	aGatedSig2	=	adelsig2 * agate2
-			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-
-	abuf3		delayr	imaxdelay			;DECLARE DELAY BUFFER
-	adelsig3	deltap3	aphase1 * aDelay		;VARIABLE TAP
-	aGatedSig3	=	adelsig3 * agate1
-			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-	
-	abuf4		delayr	imaxdelay			;DECLARE DELAY BUFFER
-	adelsig4	deltap3	aphase2 * aDelay		;VARIABLE TAP
-	aGatedSig4	=	adelsig4 * agate2
-			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-			
-	aGatedMixL	=	(aGatedSig1 + aGatedSig2) * 0.5
-	aGatedMixR	=	(aGatedSig3 + aGatedSig4) * 0.5
-	
-	aMixL,aMixR	init	0
-	
-	if iCount<iNIter then
-	 aMixL,aMixR	pitchshifter	a1,a1,kratio,iNIter,kDelay,kSmooth,imaxdelay,iwfn,iCount+1
-	endif
-	
-			xout	aGatedMixL + aMixL, aGatedMixR + aMixR
-endop
+;opcode	pitchshifter, a, aakikkiip	; global feedback signal
+;	a1,a1,kratio, iNIter,kDelay,kSmooth,imaxdelay,iwfn,iCount	xin
+;	setksmps	1
+;
+;	kPortTime	linseg	0,0.001,1
+;	;if kSmooth>0 then					; portamento smoothing
+;	 kratioL	portk	1^iCount, kPortTime*kSmooth	
+;	 kDelay		portk	kDelay, kPortTime*kSmooth	
+;	;endif
+;
+;	aDelay		interp	kDelay
+;
+;	arate		=	(kratioL-1)/kDelay		;SUBTRACT 1/1 SPEED
+;	aphase1		phasor	-arate				;MOVING PHASE 1-0
+;	aphase2		phasor	-arate, .5			;MOVING PHASE 1-0 - PHASE OFFSET BY 180 DEGREES (.5 RADIANS)
+;	
+;	agate1		tablei	aphase1, iwfn, 1, 0, 1		;
+;	agate2		tablei	aphase2, iwfn, 1, 0, 1		;
+;
+;	aGatedMixL,aGatedMixR	init	0
+;	
+;	abuf1		delayr	imaxdelay			;DECLARE DELAY BUFFER
+;	adelsig1	deltap3	aphase1 * aDelay		;VARIABLE TAP
+;	aGatedSig1	=	adelsig1 * agate1
+;			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
+;	
+;	abuf2		delayr	imaxdelay			;DECLARE DELAY BUFFER
+;	adelsig2	deltap3	aphase2 * aDelay		;VARIABLE TAP
+;	aGatedSig2	=	adelsig2 * agate2
+;			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
+;
+;	abuf3		delayr	imaxdelay			;DECLARE DELAY BUFFER
+;	adelsig3	deltap3	aphase1 * aDelay		;VARIABLE TAP
+;	aGatedSig3	=	adelsig3 * agate1
+;			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
+;	
+;	abuf4		delayr	imaxdelay			;DECLARE DELAY BUFFER
+;	adelsig4	deltap3	aphase2 * aDelay		;VARIABLE TAP
+;	aGatedSig4	=	adelsig4 * agate2
+;			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
+;			
+;	aGatedMixL	=	(aGatedSig1 + aGatedSig2) * 0.5
+;	aGatedMixR	=	(aGatedSig3 + aGatedSig4) * 0.5
+;	
+;	aMixL,aMixR	init	0
+;	
+;	if iCount<iNIter then
+;	 aMixL,aMixR	pitchshifter	a1,a1,kratio,iNIter,kDelay,kSmooth,imaxdelay,iwfn,iCount+1
+;	endif
+;	
+;			xout	aGatedMixL + aMixL, aGatedMixR + aMixR
+;endop
 
 
 instr 1
@@ -173,14 +173,14 @@ krms	SwitchPort	krms,0.01,0.05
 
 a1	EnvelopeFollower	a1,ksens,katt,krel,kfreq,ktype,kres*0.95,kdist*100
 
-a1 pitchshifter i(aa), i(aakikkiip), a1,k(kratio), i(kNIter),i(kDelay),i(kSmooth),i(iMaxDelay),i(iWfn)
+;a1 pitchshifter a, i(aakikkiip), a1,k(kratio), i(kNIter),i(kDelay),i(kSmooth),i(iMaxDelay),i(iWfn)
 
 ;a1 pitchshifter	a1, a1, kRatio,i(kNIter),kDelay,kSmooth,iMaxDelay,iWfn
 
 ;a2	EnvelopeFollower	a2,ksens,katt,krel,kfreq,ktype,kres*0.95,kdist*100
 a1	=	a1 * klevel * (1 - ((kdist*0.3)^0.02))	;scale amplitude according to distortion level so that it doesn't blow up
 ;a2	=	a2 * klevel * (1 - ((kdist*0.3)^0.02))
-	outs	a1,a1
+	outs	a1, a1
 endin
 
 </CsInstruments>
