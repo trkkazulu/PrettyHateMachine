@@ -3,7 +3,7 @@
 
 <Cabbage>
 form caption("Pretty Hate Machine") size(700, 100), pluginid("envf") style("legacy")
-image                  , , colour(22, 79, 50, 255), , , outlinethickness(4) bounds(0, 0, 650, 97) corners(5)
+image   , , colour(22, 79, 50, 255), , , outlinethickness(4) bounds(0, 0, 650, 97) corners(5)
 ;image                  pos(0, 0), size(530, 100), colour("brown"), shape("rounded"), outlinecolour("white"), outlinethickness(4)
 vmeter   bounds(20, 10, 15, 80) channel("Meter") value(0) outlinecolour("black"), overlaycolour(20, 3, 3,255) metercolour:0(255,100,100,255) metercolour:1(255,150,155, 255) metercolour:2(255,255,123, 255) outlinethickness(3) 
 rslider bounds(40, 10, 75, 75) channel("sens") colour(255, 100, 100, 255) range(0, 1, 0.65, 1, 0.001) text("Guilt") textcolour(255, 255, 200, 255) trackercolour(255, 255, 150, 255)
@@ -160,7 +160,8 @@ endif
 
 ;kfactor octave(kOct)
 
-a1	diskin2	"bassClipCR.wav",1,0,1
+a1	diskin2	"bassClipCR.wav",0.5,0,1
+a2 diskin2 "bassClipCR.wav", 1, 0, 1
 ;a1	=	a1*0.4
 ;a2	=	a2*0.4
 
@@ -173,14 +174,11 @@ krms	SwitchPort	krms,0.01,0.05
 
 a1	EnvelopeFollower	a1,ksens,katt,krel,kfreq,ktype,kres*0.95,kdist*100
 
-;a1 pitchshifter a, i(aakikkiip), a1,k(kratio), i(kNIter),i(kDelay),i(kSmooth),i(iMaxDelay),i(iWfn)
+a2	EnvelopeFollower	a2,ksens,katt,krel,kfreq,ktype,kres*0.95,kdist*100
 
-;a1 pitchshifter	a1, a1, kRatio,i(kNIter),kDelay,kSmooth,iMaxDelay,iWfn
-
-;a2	EnvelopeFollower	a2,ksens,katt,krel,kfreq,ktype,kres*0.95,kdist*100
 a1	=	a1 * klevel * (1 - ((kdist*0.3)^0.02))	;scale amplitude according to distortion level so that it doesn't blow up
-;a2	=	a2 * klevel * (1 - ((kdist*0.3)^0.02))
-	outs	a1, a1
+a2	=	a2 * klevel * (1 - ((kdist*0.3)^0.02))
+	outs	a1, a2
 endin
 
 </CsInstruments>
