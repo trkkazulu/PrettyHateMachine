@@ -3,23 +3,24 @@
 
 <Cabbage>
 form caption("Pretty Hate Machine") size(700, 100), pluginid("envf") style("legacy")
-image   , , colour(22, 79, 50, 255), , , outlinethickness(4) bounds(0, 0, 650, 97) corners(5)
-;image                  pos(0, 0), size(530, 100), colour("brown"), shape("rounded"), outlinecolour("white"), outlinethickness(4)
+
+image colour(165, 42, 42, 255), , outlinethickness(4) bounds(0, 0, 700, 100) corners(5) file("brushed metal background 1305.jpg")
+
 vmeter   bounds(20, 10, 15, 80) channel("Meter") value(0) outlinecolour("black"), overlaycolour(20, 3, 3,255) metercolour:0(255,100,100,255) metercolour:1(255,150,155, 255) metercolour:2(255,255,123, 255) outlinethickness(3) 
 rslider bounds(40, 10, 75, 75) channel("sens") colour(255, 100, 100, 255) range(0, 1, 0.65, 1, 0.001) text("Guilt") textcolour(255, 255, 200, 255) trackercolour(255, 255, 150, 255)
 
 ;rslider bounds(40, 10, 75, 75) channel("sens") colour(255, 100, 100, 255) range(0, 1, 0.65, 1, 0.001) text("Guilt") textcolour(255, 255, 200, 255) trackercolour(255, 255, 150, 255)
 
-rslider bounds( 40, 11, 75, 75), text("Guilt"), channel("sens"),  range(0, 1, 0.65),                   colour(255,100,100), textcolour(255,255,200), trackercolour(255,255,150)
+rslider bounds(40, 10, 75, 75), text("Guilt"), channel("sens"),  range(0, 1, 0.65),                   colour(255,100,100), textcolour(255,255,200), trackercolour(255,255,150)
 rslider bounds(110,  6, 45, 45), text("Att."),        channel("att"),   range(0.001, 0.5, 0.01, 0.5, 0.001), colour(255,200,100), textcolour(255,255,200), trackercolour(255,255,150)
 rslider bounds(110, 51, 45, 45), text("Dec."),        channel("rel"),   range(0.001, 0.5, 0.2, 0.5, 0.001),  colour(255,200,100), textcolour(255,255,200), trackercolour(255,255,150)
 rslider bounds(150, 10, 75, 75), text("Debasement"),   channel("freq"),  range(10, 10000, 1000, 0.5, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255)
-label    bounds(225, 15, 85, 14), text("Type"), fontcolour(255,255,200)
-combobox bounds(225, 30, 85, 20), text("lpf18","tone"), value("1"), channel("type")
+;label    bounds(225, 15, 85, 14), text("Type"), fontcolour(255,255,200)
+;combobox bounds(225, 30, 85, 20), text("lpf18","tone"), value("1"), channel("type")
 rslider bounds(420, 10, 75, 75), text("Praise"),channel("res"),   range(0, 1, 0.75, 1, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("resID")
 
 rslider bounds(490, 10, 75, 75), text("Hate"),  channel("dist"),  range(0, 0.2, 0, 1, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("distID")
-rslider bounds(560, 10, 75, 75), text("Output"), channel("level"), range(0, 1, 1, 1, 0.001), colour(255, 200, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255)
+rslider bounds(560, 10, 75, 75), text("Output"), channel("level"), range(0, 10, 1, 1, 0.001), colour(255, 200, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255)
 
 checkbox bounds(324, 28, 78, 31) text("Out"),channel("oct"), radiogroup("99") colour:1(255, 0, 0, 255)
 checkbox bounds(324, 60, 78, 32) text("In"),channel("oct"), radiogroup("99")value(1)  
@@ -77,72 +78,19 @@ imaxdelay = 0.5
 iwfn = 1
 iCount = 0
 
-;opcode	pitchshifter, a, aakikkiip	; global feedback signal
-;	a1,a1,kratio, iNIter,kDelay,kSmooth,imaxdelay,iwfn,iCount	xin
-;	setksmps	1
-;
-;	kPortTime	linseg	0,0.001,1
-;	;if kSmooth>0 then					; portamento smoothing
-;	 kratioL	portk	1^iCount, kPortTime*kSmooth	
-;	 kDelay		portk	kDelay, kPortTime*kSmooth	
-;	;endif
-;
-;	aDelay		interp	kDelay
-;
-;	arate		=	(kratioL-1)/kDelay		;SUBTRACT 1/1 SPEED
-;	aphase1		phasor	-arate				;MOVING PHASE 1-0
-;	aphase2		phasor	-arate, .5			;MOVING PHASE 1-0 - PHASE OFFSET BY 180 DEGREES (.5 RADIANS)
-;	
-;	agate1		tablei	aphase1, iwfn, 1, 0, 1		;
-;	agate2		tablei	aphase2, iwfn, 1, 0, 1		;
-;
-;	aGatedMixL,aGatedMixR	init	0
-;	
-;	abuf1		delayr	imaxdelay			;DECLARE DELAY BUFFER
-;	adelsig1	deltap3	aphase1 * aDelay		;VARIABLE TAP
-;	aGatedSig1	=	adelsig1 * agate1
-;			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-;	
-;	abuf2		delayr	imaxdelay			;DECLARE DELAY BUFFER
-;	adelsig2	deltap3	aphase2 * aDelay		;VARIABLE TAP
-;	aGatedSig2	=	adelsig2 * agate2
-;			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-;
-;	abuf3		delayr	imaxdelay			;DECLARE DELAY BUFFER
-;	adelsig3	deltap3	aphase1 * aDelay		;VARIABLE TAP
-;	aGatedSig3	=	adelsig3 * agate1
-;			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-;	
-;	abuf4		delayr	imaxdelay			;DECLARE DELAY BUFFER
-;	adelsig4	deltap3	aphase2 * aDelay		;VARIABLE TAP
-;	aGatedSig4	=	adelsig4 * agate2
-;			delayw	a1				;WRITE AUDIO TO THE BEGINNING OF THE DELAY BUFFER, MIX IN FEEDBACK SIGNAL - PROPORTION DEFINED BY gkFB
-;			
-;	aGatedMixL	=	(aGatedSig1 + aGatedSig2) * 0.5
-;	aGatedMixR	=	(aGatedSig3 + aGatedSig4) * 0.5
-;	
-;	aMixL,aMixR	init	0
-;	
-;	if iCount<iNIter then
-;	 aMixL,aMixR	pitchshifter	a1,a1,kratio,iNIter,kDelay,kSmooth,imaxdelay,iwfn,iCount+1
-;	endif
-;	
-;			xout	aGatedMixL + aMixL, aGatedMixR + aMixR
-;endop
-
 
 instr 1
 ksens chnget "sens"
 katt chnget "att"
 krel chnget "rel"
 kfreq chnget "freq"
-ktype chnget "type"
+;ktype chnget "type"
 ktype	init	1
 kres chnget "res"
 kdist chnget "dist"
 klevel chnget "level"
 kOct chnget "oct"
-a1,a2	ins
+
 
 
 if changed:k(ktype)==1 then
@@ -158,15 +106,11 @@ if changed:k(ktype)==1 then
  endif
 endif
 
-;kfactor octave(kOct)
-
-a1	diskin2	"bassClipCR.wav",0.5,0,1
-a2 diskin2 "bassClipCR.wav", 1, 0, 1
-;a1	=	a1*0.4
-;a2	=	a2*0.4
+;a1 inch 1
+a1	diskin2 "bassClipCR.wav", 1,1,1	
 
 /*level meter*/
-amix	sum	a1,a2
+amix	sum	a1,a1
 krms	rms	amix*0.5
 krms	pow	krms,0.75
 krms	SwitchPort	krms,0.01,0.05
@@ -174,11 +118,11 @@ krms	SwitchPort	krms,0.01,0.05
 
 a1	EnvelopeFollower	a1,ksens,katt,krel,kfreq,ktype,kres*0.95,kdist*100
 
-a2	EnvelopeFollower	a2,ksens,katt,krel,kfreq,ktype,kres*0.95,kdist*100
+;a2	EnvelopeFollower	a2,ksens,katt,krel,kfreq,ktype,kres*0.95,kdist*100
 
 a1	=	a1 * klevel * (1 - ((kdist*0.3)^0.02))	;scale amplitude according to distortion level so that it doesn't blow up
-a2	=	a2 * klevel * (1 - ((kdist*0.3)^0.02))
-	outs	a1, a2
+;a2	=	a2 * klevel * (1 - ((kdist*0.3)^0.02))
+	outs	a1, a1
 endin
 
 </CsInstruments>
