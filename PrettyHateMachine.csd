@@ -1,8 +1,8 @@
-; PrettyHateMachine.csd bounds(0, 0, 0, 0)
+; PrettyHateMachine.csd
 ; Written by Jair-Rohm Parker Wells 2019
 
 <Cabbage>
-form caption("Pretty Hate Machine"), size(700, 100), pluginid("envf"), style("legacy"), bundle("brushed metal background 1305.jpg")
+form caption("Pretty Hate Machine"), size(700, 100), pluginid("phm1"), style("legacy"), bundle("brushed metal background 1305.jpg")
 
 image colour(165, 42, 42, 255), outlinethickness(4), bounds(0, 0, 700, 100), corners(5), file("brushed metal background 1305.jpg")
 
