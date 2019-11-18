@@ -2,19 +2,16 @@
 ; Written by Jair-Rohm Parker Wells 2019
 
 <Cabbage>
-form caption("Pretty Hate Machine") size(700, 100), pluginid("envf") style("legacy")
+form caption("Pretty Hate Machine") size(700, 100), pluginid("envf") style("legacy"),bundle("/Users/jairrohmwells/Documents/Cabbage/PrettyHateMachine/brushed metal background 1305.jpg")
 
 image colour(165, 42, 42, 255), , outlinethickness(4) bounds(0, 0, 700, 100) corners(5) file("brushed metal background 1305.jpg")
 
 vmeter   bounds(20, 10, 15, 80) channel("Meter") value(0) outlinecolour("black"), overlaycolour(20, 3, 3,255) metercolour:0(255,100,100,255) metercolour:1(255,150,155, 255) metercolour:2(255,255,123, 255) outlinethickness(3) 
 rslider bounds(40, 10, 75, 75) channel("sens") colour(255, 100, 100, 255) range(0, 1, 0.65, 1, 0.001) text("Guilt") textcolour(255, 255, 200, 255) trackercolour(255, 255, 150, 255)
-
-;rslider bounds(40, 10, 75, 75) channel("sens") colour(255, 100, 100, 255) range(0, 1, 0.65, 1, 0.001) text("Guilt") textcolour(255, 255, 200, 255) trackercolour(255, 255, 150, 255)
-
-rslider bounds(40, 10, 75, 75), text("Guilt"), channel("sens"),  range(0, 1, 0.65),                   colour(255,100,100), textcolour(255,255,200), trackercolour(255,255,150)
-rslider bounds(110,  6, 45, 45), text("Att."),        channel("att"),   range(0.001, 0.5, 0.01, 0.5, 0.001), colour(255,200,100), textcolour(255,255,200), trackercolour(255,255,150)
-rslider bounds(110, 51, 45, 45), text("Dec."),        channel("rel"),   range(0.001, 0.5, 0.2, 0.5, 0.001),  colour(255,200,100), textcolour(255,255,200), trackercolour(255,255,150)
-rslider bounds(150, 10, 75, 75), text("Debasement"),   channel("freq"),  range(10, 10000, 1000, 0.5, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255)
+rslider bounds(40, 10, 75, 75), text("Guilt"), channel("sens"),  range(0, 1, 0.65, 1, 0.001),                   colour(255, 100, 100, 255), textcolour(0, 0, 0, 255), trackercolour(255, 255, 150, 255) value(0.65)
+rslider bounds(110, 6, 45, 45), text("Att."),        channel("att"),   range(0.001, 0.5, 0.01, 0.5, 0.001), colour(255, 200, 100, 255), textcolour(0, 0, 0, 255), trackercolour(255, 255, 150, 255) value(0.01)
+rslider bounds(110, 50, 45, 45), text("Dec."),        channel("rel"),   range(0.001, 0.5, 0.2, 0.5, 0.001),  colour(255, 200, 100, 255), textcolour(0, 0, 0, 255), trackercolour(255, 255, 150, 255) value(0.2)
+rslider bounds(150, 10, 75, 75), text("Debasement"),   channel("freq"),  range(10, 10000, 1000, 0.5, 0.001),colour(255, 100, 100, 255), textcolour(0, 0, 0, 255), trackercolour(255, 255, 150, 255) value(1000)
 ;label    bounds(225, 15, 85, 14), text("Type"), fontcolour(255,255,200)
 ;combobox bounds(225, 30, 85, 20), text("lpf18","tone"), value("1"), channel("type")
 rslider bounds(420, 10, 75, 75), text("Praise"),channel("res"),   range(0, 1, 0.75, 1, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("resID")
@@ -68,6 +65,28 @@ opcode	SwitchPort, k, kii
 	kout			portk	kin, kporttime
 	kold			=	kout
 				xout	kout
+endop
+
+opcode	OctaveDivider,a,akkk
+	ain,kdivider,kInputFilt,kToneFilt	xin
+	krms	rms		ain
+		setksmps	1		;SET kr=sr, ksmps=1 (sample)
+	kcount	init		0		;COUNTER USED TO COUNT ZERO CROSSINGS
+	kout	init		-1		;INITIAL DISPOSITION OF OUTPUT SIGNAL
+	ain	butlp		ain,kInputFilt	;LOWPASS FILTER THE INPUT SIGNAL (TO REMOVE SOME HF OVERTONE MATERIAL)
+	ain	butlp		ain,kInputFilt	;LOWPASS FILTER THE INPUT SIGNAL (TO REMOVE SOME HF OVERTONE MATERIAL)
+	ain	butlp		ain,kInputFilt	;LOWPASS FILTER THE INPUT SIGNAL (TO REMOVE SOME HF OVERTONE MATERIAL)
+	ksig	downsamp	ain		;CREATE A K-RATE VERSION OF THE INPUT AUDIO SIGNAL
+	ktrig	trigger		ksig,0,2	;IF THE INPUT AUDIO SIGNAL (K-RATE VERSION) CROSSES ZERO IN EITHER DIRECTION, GENERATE A TRIGGER
+	if ktrig==1 then			;IF A TRIGGER HAS BEEN GENERATED...
+	 kcount	wrap	kcount+1,0,kdivider	;INCREMENT COUNTER BUT WRAPAROUND ACCORDING TO THE NUMBER OF FREQUENCY DIVISIONS REQUIRED
+	 if kcount=0 then			;IF WE HAVE COMPLETED A DIVISION BLOCK (I.E. COUNTER HAS JUST WRAPPED AROUND)...
+	  kout =	(kout=-1?1:-1)		;FLIP THE OUTPUT SIGNAL BETWEEN -1 AND 1 (THIS WILL CREATE A SQUARE WAVE)
+	 endif
+	endif
+	aout	upsamp		kout		;CREATE A-RATE SIGNAL FROM K-RATE SIGNAL
+	aout	butlp		aout,kToneFilt	;FILTER THE OUTPUT TONE
+		xout		aout*krms	;SEND AUDIO BACK TO CALLER INSTRUMENT, SCALE ACCORDING TO THE ENVELOPE FOLLOW OF THE INPUT SIGNAL
 endop
 
 kratio = 1
