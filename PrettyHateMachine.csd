@@ -2,9 +2,9 @@
 ; Written by Jair-Rohm Parker Wells 2019
 
 <Cabbage>
-form caption("Pretty Hate Machine") size(700, 100), pluginid("envf") style("legacy"),bundle("/Users/jairrohmwells/Documents/Cabbage/PrettyHateMachine/brushed metal background 1305.jpg")
+form caption("Pretty Hate Machine"), size(700, 100), pluginid("envf"), style("legacy"), bundle("brushed metal background 1305.jpg")
 
-image colour(165, 42, 42, 255), , outlinethickness(4) bounds(0, 0, 700, 100) corners(5) file("brushed metal background 1305.jpg")
+image colour(165, 42, 42, 255), outlinethickness(4), bounds(0, 0, 700, 100), corners(5), file("brushed metal background 1305.jpg")
 
 vmeter   bounds(20, 10, 15, 80) channel("Meter") value(0) outlinecolour("black"), overlaycolour(20, 3, 3,255) metercolour:0(255,100,100,255) metercolour:1(255,150,155, 255) metercolour:2(255,255,123, 255) outlinethickness(3) 
 rslider bounds(40, 10, 75, 75) channel("sens") colour(255, 100, 100, 255) range(0, 1, 0.65, 1, 0.001) text("Guilt") textcolour(255, 255, 200, 255) trackercolour(255, 255, 150, 255)
@@ -17,7 +17,7 @@ rslider bounds(150, 10, 75, 75), text("Debasement"),   channel("freq"),  range(1
 rslider bounds(420, 10, 75, 75), text("Praise"),channel("res"),   range(0, 1, 0.75, 1, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("resID")
 
 rslider bounds(490, 10, 75, 75), text("Hate"),  channel("dist"),  range(0, 0.2, 0, 1, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("distID")
-rslider bounds(560, 10, 75, 75), text("Output"), channel("level"), range(0, 10, 1, 1, 0.001), colour(255, 200, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255)
+rslider bounds(560, 10, 75, 75), text("Output"), channel("level"), range(0, 10, 0, 1, 0.001), colour(255, 200, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255)
 
 checkbox bounds(324, 28, 78, 31) text("Out"),channel("oct"), radiogroup("99") colour:1(255, 0, 0, 255)
 checkbox bounds(324, 60, 78, 32) text("In"),channel("oct"), radiogroup("99")value(1)  
@@ -35,7 +35,7 @@ nchnls = 2
 0dbfs = 1
 
 
-
+;- Region: UDOs
 opcode	EnvelopeFollower,a,akkkkkkk
 	ain,ksens,katt,krel,kfreq,ktype,kres,kdist	xin	
 	setksmps	4
@@ -125,11 +125,15 @@ if changed:k(ktype)==1 then
  endif
 endif
 
-;a1 inch 1
-a1	diskin2 "bassClipCR.wav", 1,1,1	
+
+;- Region: Input Section
+
+a1 inch 1
+a2 inch 2
+;a1,a2	diskin2 "bassCR.wav", 1,1,1	
 
 /*level meter*/
-amix	sum	a1,a1
+amix	sum	a1,a2
 krms	rms	amix*0.5
 krms	pow	krms,0.75
 krms	SwitchPort	krms,0.01,0.05
@@ -137,11 +141,11 @@ krms	SwitchPort	krms,0.01,0.05
 
 a1	EnvelopeFollower	a1,ksens,katt,krel,kfreq,ktype,kres*0.95,kdist*100
 
-;a2	EnvelopeFollower	a2,ksens,katt,krel,kfreq,ktype,kres*0.95,kdist*100
+a2	EnvelopeFollower	a2,ksens,katt,krel,kfreq,ktype,kres*0.95,kdist*100
 
 a1	=	a1 * klevel * (1 - ((kdist*0.3)^0.02))	;scale amplitude according to distortion level so that it doesn't blow up
-;a2	=	a2 * klevel * (1 - ((kdist*0.3)^0.02))
-	outs	a1, a1
+a2	=	a2 * klevel * (1 - ((kdist*0.3)^0.02))
+	outs	a1*klevel, a2*klevel
 endin
 
 </CsInstruments>
