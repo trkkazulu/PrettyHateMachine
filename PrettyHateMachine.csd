@@ -14,13 +14,11 @@ rslider bounds(110, 50, 45, 45), text("Dec."),        channel("rel"),   range(0.
 rslider bounds(150, 10, 75, 75), text("Debasement"),   channel("freq"),  range(10, 10000, 1000, 0.5, 0.001),colour(255, 100, 100, 255), textcolour(0, 0, 0, 255), trackercolour(255, 255, 150, 255) value(1000)
 
 rslider bounds(420, 10, 75, 75), text("Praise"),channel("res"),   range(0, 1, 0.75, 1, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("resID")
+rslider bounds(326, 10, 75, 75), text("Octave"),channel("oct"),   range(0, 12, 0.00, 1, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("resID")
 
 rslider bounds(490, 10, 75, 75), text("Hate"),  channel("dist"),  range(0, 0.2, 0, 1, 0.001),colour(255, 100, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255), identchannel("distID")
 rslider bounds(560, 10, 75, 75), text("Output"), channel("level"), range(0, 10, 0, 1, 0.001), colour(255, 200, 100, 255), textcolour(255, 255, 200, 255), trackercolour(255, 255, 150, 255)
 
-checkbox bounds(324, 28, 78, 31) text("Out"),channel("oct"), radiogroup("99") colour:1(255, 0, 0, 255) fontcolour:0(0, 0, 0, 255) fontcolour:1(0, 0, 0, 255)
-checkbox bounds(324, 60, 78, 32) text("In"),channel("oct"), radiogroup("99")value(1) , fontcolour:0(0, 0, 0, 255) fontcolour:1(0, 0, 0, 255)
-label bounds(324, 10, 78, 17) text("Octave") fontcolour(0, 0, 0, 255)
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>
@@ -150,12 +148,16 @@ asig1 OctaveDivider a1, kdivider, kInputFilt, kToneFilt
 
 asig2 OctaveDivider a2, kdivider, kInputFilt, kToneFilt
 
-aout1 = asig1*3
-aout2 = asig2*3
+aout1 = asig1*kOct
+aout2 = asig2*kOct
 
 a1	=	a1 * klevel * (1 - ((kdist*0.3)^0.02))	;scale amplitude according to distortion level so that it doesn't blow up
 a2	=	a2 * klevel * (1 - ((kdist*0.3)^0.02))
-   outs aout1+a1*klevel, aout2+a2*klevel
+
+
+
+
+   outs aout1+a1*klevel,aout2+a2*klevel
 
 endin
 
