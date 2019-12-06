@@ -27,7 +27,7 @@ rslider bounds(560, 10, 75, 75), text("Output"), channel("level"), range(0, 10, 
 <CsInstruments>
 
 ;sr is set by the host
-ksmps = 64
+ksmps = 32
 nchnls = 2
 0dbfs = 1
 
@@ -129,9 +129,9 @@ endif
 
 ;- Region: Input Section
 
-;a1 inch 1
-;a2 inch 2
-a1,a2	diskin2 "bassCR.wav", 1,1,1	
+a1 inch 1
+a2 inch 2
+;a1,a2	diskin2 "bassCR.wav", 1,1,1	
 
 /*level meter*/
 amix	sum	a1,a2
@@ -157,7 +157,7 @@ a2	=	a2 * klevel * (1 - ((kdist*0.3)^0.02))
 
 
 
-   outs aout1+a1*klevel,aout2+a2*klevel
+   outs a1+aout1*klevel,a2+aout2*klevel
 
 endin
 
